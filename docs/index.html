@@ -1726,10 +1726,11 @@ represent them as calendar dates and times.</p>
 <pre class="r"><code>Wifi$timestamp &lt;- as.POSIXct(Wifi$timestamp) 
 App$timestamp &lt;- as.POSIXct(App$timestamp)
 ESM$Date &lt;- as.POSIXct(ESM$Date)</code></pre>
-<p>We continue with adding the end time to the app usage dataset.</p>
-<pre class="r"><code>App$end_time &lt;-  as.POSIXct(c(rep(NA,nrow(App)))) #Add &quot;empty&quot; end time column (with the class POSIXct)
+<p>We continue with adding the end time to the app usage dataset (note
+that the duration is rounded to seconds).</p>
+<pre class="r"><code>App$end_time &lt;-  as.POSIXct(c(rep(NA,nrow(App)))) # Add &quot;empty&quot; end time column (with the class POSIXct)
 
-App$end_time  &lt;- App$timestamp + App$duration #Add start time (timestamp) and duration together to calculate the end time</code></pre>
+App$end_time  &lt;- App$timestamp + App$duration # Add start time (timestamp) and duration together to calculate the end time</code></pre>
 <table>
 <thead>
 <tr class="header">
@@ -2270,9 +2271,15 @@ LabelMissing_App &lt;- LabelMissing_App %&gt;%
   group_by(floor_date(Date, &quot;1 day&quot;)) %&gt;% #Calculates missing values per day
   summarise(Date = Date,
             Time = Time,
-            difference = abs(Time - lag(Time))) # lag(Time) shows the next time point, which makes it possible to calculate the difference between two time points.
-
-# Calculate how many hours past from 00:00 to the first recorded app usage (the first difference will be &quot;NA&quot;)
+            difference = abs(Time - lag(Time))) # lag(Time) shows the next time point, which makes it possible to calculate the difference between two time points.</code></pre>
+<pre><code>## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+## dplyr 1.1.0.
+## ℹ Please use `reframe()` instead.
+## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+##   always returns an ungrouped data frame and adjust accordingly.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre class="r"><code># Calculate how many hours past from 00:00 to the first recorded app usage (the first difference will be &quot;NA&quot;)
 LabelMissing_App$difference[is.na(LabelMissing_App$difference)] &lt;-
   LabelMissing_App$Time[is.na(LabelMissing_App$difference)]
 
@@ -2294,9 +2301,15 @@ LabelMissing_App &lt;- LabelMissing_App %&gt;%
     Time = Time,
     difference = abs(Time - lead(Time, 1)),
     difference_index = difference_index
-  ) # Change to other direction, lead(Time) shows the previous time point
-
-# Calculate how many hours past from the last recorded measurement to 00:00 (the difference for the last recorded measurement will be NA)
+  ) # Change to other direction, lead(Time) shows the previous time point</code></pre>
+<pre><code>## Warning: Returning more (or less) than 1 row per `summarise()` group was deprecated in
+## dplyr 1.1.0.
+## ℹ Please use `reframe()` instead.
+## ℹ When switching from `summarise()` to `reframe()`, remember that `reframe()`
+##   always returns an ungrouped data frame and adjust accordingly.
+## Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
+## generated.</code></pre>
+<pre class="r"><code># Calculate how many hours past from the last recorded measurement to 00:00 (the difference for the last recorded measurement will be NA)
 LabelMissing_App$difference[is.na(LabelMissing_App$difference)] &lt;-
   24 - LabelMissing_App$Time[is.na(LabelMissing_App$difference)]
 
@@ -2814,9 +2827,9 @@ for(k in c(min_window:max_window)){ # here we loop through the different moving 
     OverallResults[[k-min_window+1]] &lt;- results # store results in our empty list
     print(paste(&quot;Completed Time Window:&quot;,w[1],&quot;, Running time:&quot;, paste(end_time - start_time)))
 }</code></pre>
-<pre><code>## [1] &quot;Completed Time Window: 6 , Running time: 44.3280489444733&quot;
-## [1] &quot;Completed Time Window: 7 , Running time: 28.0903451442719&quot;
-## [1] &quot;Completed Time Window: 8 , Running time: 27.8172018527985&quot;</code></pre>
+<pre><code>## [1] &quot;Completed Time Window: 6 , Running time: 41.7029678821564&quot;
+## [1] &quot;Completed Time Window: 7 , Running time: 28.0341827869415&quot;
+## [1] &quot;Completed Time Window: 8 , Running time: 28.2695298194885&quot;</code></pre>
 <pre class="r"><code>stopCluster(cl)</code></pre>
 <p>We create a data frame that shows the predicted (pred) and true
 values for different moving window sizes (w). The “index” columns

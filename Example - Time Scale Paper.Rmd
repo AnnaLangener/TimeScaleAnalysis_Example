@@ -60,12 +60,12 @@ App$timestamp <- as.POSIXct(App$timestamp)
 ESM$Date <- as.POSIXct(ESM$Date)
 ```
 
-We continue with adding the end time to the app usage dataset.
+We continue with adding the end time to the app usage dataset (note that the duration is rounded to seconds).
 
 ```{r echo=TRUE}
-App$end_time <-  as.POSIXct(c(rep(NA,nrow(App)))) #Add "empty" end time column (with the class POSIXct)
+App$end_time <-  as.POSIXct(c(rep(NA,nrow(App)))) # Add "empty" end time column (with the class POSIXct)
 
-App$end_time  <- App$timestamp + App$duration #Add start time (timestamp) and duration together to calculate the end time
+App$end_time  <- App$timestamp + App$duration # Add start time (timestamp) and duration together to calculate the end time
 ```
 
 ```{r echo=FALSE}
